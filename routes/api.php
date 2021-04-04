@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\KnightController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +15,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+//Route::middleware('auth:api')->get('/user', function (Request $request) {
+//    return $request->user();
+//});
+Route::middleware('api')->group(function () {
+    Route::get('knights', [KnightController::class, 'index']);
+    Route::post('knights', [KnightController::class, 'updateKnights']);
+    Route::get('start-fight', [KnightController::class, 'startFight']);
 });
