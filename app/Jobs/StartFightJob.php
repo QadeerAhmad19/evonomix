@@ -22,7 +22,7 @@ class StartFightJob implements ShouldQueue
      */
     public function __construct()
     {
-        //
+        $this->queue = 'fight';
     }
 
     /**

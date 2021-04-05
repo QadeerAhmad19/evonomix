@@ -22,4 +22,5 @@ Route::middleware('api')->group(function () {
     Route::get('knights', [KnightController::class, 'index']);
     Route::post('knights', [KnightController::class, 'updateKnights']);
     Route::get('start-fight', [KnightController::class, 'startFight']);
+    Route::get('get-current-fight', [KnightController::class, 'currentFight']);
 });

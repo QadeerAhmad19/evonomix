@@ -12,7 +12,7 @@ class KnightController extends AppBaseController
 {
     public function index()
     {
-        $knights = Knight::select(DB::raw('id, name, age, courage, justice, mercy, generosity, faith, nobality, hope, (courage + justice + mercy + generosity + faith + nobality + hope)/100 as total'))
+        $knights = Knight::select(DB::raw('id, name, age, courage, justice, mercy, generosity, faith, nobality, hope, is_winner, damage, health, (courage + justice + mercy + generosity + faith + nobality + hope)/100 as total'))
             ->orderBy('total','desc')
             ->get()
             ->take(3);
@@ -27,8 +27,14 @@ class KnightController extends AppBaseController
 
     public function startFight()
     {
-        $fightJob = (new StartFightJob())->delay(Carbon::now()->addHours(1));
+        $fightJob = (new StartFightJob())->delay(Carbon::now()->addMinutes(60));
         dispatch($fightJob);
         return $this->sendResponse($fightJob, 'Competition Has Been Started');
+    }
+
+    public function currentFight(Request $request)
+    {
+        $qFights = DB::table('jobs')->where('queue', 'fight')->get();
+        return $this->sendResponse($qFights, 'Current Queue Fights List');
     }
 }

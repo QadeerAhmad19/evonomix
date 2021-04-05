@@ -1,13 +1,14 @@
 <template>
     <div>
         <h2 class="text-center">knights List</h2>
-        <div id="loader-view" v-show="loading">
+        <div id="loader-view" v-show="loading||fightInProgress">
             <section class="loader-container">
                 <span class="loader"></span>
             </section>
         </div>
+        <p v-if="fightInProgress">Please Wait Fight is in Progress. It'll take 1 hour.</p>
         <template v-if="!loading">
-            <button class="btn btn-success" v-if="knights.length>0&&knights.length==2" @click="startFight()">Start Competition</button>
+            <button class="btn btn-success" v-if="knights.length>0&&knights.length==2&&!isCompetitionEnd" @click="startFight()">Start Competition</button>
             <table class="table" v-if="knights.length>0">
                 <thead>
                 <tr>
@@ -20,11 +21,13 @@
                     <th>Mercy</th>
                     <th>Generosity</th>
                     <th>Hope</th>
+                    <th v-show="isCompetitionEnd">Damage</th>
+                    <th v-show="isCompetitionEnd">Health</th>
                     <th v-show="knights.length>2">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="knight in knights" :key="knight.id">
+                <tr v-for="knight in knights" :key="knight.id" :class="knight.is_winner?'bg-success':''">
                     <td>{{ knight.id }}</td>
                     <td>{{ knight.name }}</td>
                     <td>{{ knight.age }}</td>
@@ -34,19 +37,21 @@
                     <td>{{ appendPercentage(knight.mercy) }}</td>
                     <td>{{ appendPercentage(knight.generosity) }}</td>
                     <td>{{ appendPercentage(knight.hope) }}</td>
+                    <td v-show="isCompetitionEnd">{{ knight.damage }}</td>
+                    <td v-show="isCompetitionEnd">{{ knight.health }}</td>
                     <td>
                         <div class="btn-group" role="group" v-show="knights.length>2">
                             <button class="btn btn-success" @click="deleteKnight(knight.id)">Remove Knight</button>
                         </div>
-                    </td>
-                    <td v-if="knight.is_winner">
-                        <button class="btn btn-success">Winner</button>
+                        <div class="btn-group" role="group" v-show="knight.is_winner">
+                            <button class="btn btn-success" >Winner</button>
+                        </div>
                     </td>
                 </tr>
                 </tbody>
             </table>
             <div class="text-center text-bold" v-else>
-                <p>There are no Knights Record. Please contact support.</p>
+                <p v-if="!fightInProgress">There are no Knights Record. Please contact support.</p>
             </div>
         </template>
     </div>
@@ -57,7 +62,13 @@
         data() {
             return {
                 knights: [],
-                loading: false
+                loading: false,
+                fightInProgress: false
+            }
+        },
+        computed:{
+            isCompetitionEnd() {
+                return this.knights.length>0&&this.knights.filter(e => e.is_winner==1).length>0?true:false;
             }
         },
         created() {
@@ -69,6 +80,7 @@
                     this.knights = response.data.data;
                     this.loading = false;
                 });
+            this.getQueueFights();
         },
         methods: {
             deleteKnight(id) {
@@ -93,7 +105,20 @@
                     console.log(response);
                     this.knights = response.data.data;
                     this.loading = false;
+                    this.fightInProgress = true;
                 });
+            },
+            getQueueFights() {
+                this.fightInProgress = false;
+                this.axios
+                    .get(`http://localhost:8000/api/get-current-fight`)
+                    .then(response => {
+                        console.log(response);
+                        if(response.data.data.length>0) {
+                            console.log(response);
+                            this.fightInProgress = true;
+                        }
+                    });
             }
         }
     }

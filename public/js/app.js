@@ -1928,12 +1928,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
       knights: [],
-      loading: false
+      loading: false,
+      fightInProgress: false
     };
+  },
+  computed: {
+    isCompetitionEnd: function isCompetitionEnd() {
+      return this.knights.length > 0 && this.knights.filter(function (e) {
+        return e.is_winner == 1;
+      }).length > 0 ? true : false;
+    }
   },
   created: function created() {
     var _this = this;
@@ -1944,6 +1957,7 @@ __webpack_require__.r(__webpack_exports__);
       _this.knights = response.data.data;
       _this.loading = false;
     });
+    this.getQueueFights();
   },
   methods: {
     deleteKnight: function deleteKnight(id) {
@@ -1970,49 +1984,23 @@ __webpack_require__.r(__webpack_exports__);
         console.log(response);
         _this2.knights = response.data.data;
         _this2.loading = false;
+        _this2.fightInProgress = true;
+      });
+    },
+    getQueueFights: function getQueueFights() {
+      var _this3 = this;
+
+      this.fightInProgress = false;
+      this.axios.get("http://localhost:8000/api/get-current-fight").then(function (response) {
+        console.log(response);
+
+        if (response.data.data.length > 0) {
+          console.log(response);
+          _this3.fightInProgress = true;
+        }
       });
     }
   }
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/FightRing.vue?vue&type=script&lang=js&":
-/*!****************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/FightRing.vue?vue&type=script&lang=js& ***!
-  \****************************************************************************************************************************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  data: function data() {
-    return {
-      loading: false
-    };
-  },
-  mounted: function mounted() {
-    console.log('Component mounted.');
-  },
-  created: function created() {}
 });
 
 /***/ }),
@@ -2126,17 +2114,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "routes": () => (/* binding */ routes)
 /* harmony export */ });
 /* harmony import */ var _components_AllKnights_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/AllKnights.vue */ "./resources/js/components/AllKnights.vue");
-/* harmony import */ var _components_FightRing_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/FightRing.vue */ "./resources/js/components/FightRing.vue");
-
 
 var routes = [{
   name: 'home',
   path: '/',
   component: _components_AllKnights_vue__WEBPACK_IMPORTED_MODULE_0__.default
-}, {
-  name: "fight",
-  path: "/begin-fight",
-  component: _components_FightRing_vue__WEBPACK_IMPORTED_MODULE_1__.default
 }];
 
 /***/ }),
@@ -38026,45 +38008,6 @@ component.options.__file = "resources/js/components/AllKnights.vue"
 
 /***/ }),
 
-/***/ "./resources/js/components/FightRing.vue":
-/*!***********************************************!*\
-  !*** ./resources/js/components/FightRing.vue ***!
-  \***********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _FightRing_vue_vue_type_template_id_6cbf7885___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FightRing.vue?vue&type=template&id=6cbf7885& */ "./resources/js/components/FightRing.vue?vue&type=template&id=6cbf7885&");
-/* harmony import */ var _FightRing_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FightRing.vue?vue&type=script&lang=js& */ "./resources/js/components/FightRing.vue?vue&type=script&lang=js&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
-
-
-
-
-/* normalize component */
-;
-var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__.default)(
-  _FightRing_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__.default,
-  _FightRing_vue_vue_type_template_id_6cbf7885___WEBPACK_IMPORTED_MODULE_0__.render,
-  _FightRing_vue_vue_type_template_id_6cbf7885___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
-  false,
-  null,
-  null,
-  null
-  
-)
-
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "resources/js/components/FightRing.vue"
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
-
-/***/ }),
-
 /***/ "./resources/js/App.vue?vue&type=script&lang=js&":
 /*!*******************************************************!*\
   !*** ./resources/js/App.vue?vue&type=script&lang=js& ***!
@@ -38094,22 +38037,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AllKnights_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./AllKnights.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/AllKnights.vue?vue&type=script&lang=js&");
  /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AllKnights_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__.default); 
-
-/***/ }),
-
-/***/ "./resources/js/components/FightRing.vue?vue&type=script&lang=js&":
-/*!************************************************************************!*\
-  !*** ./resources/js/components/FightRing.vue?vue&type=script&lang=js& ***!
-  \************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FightRing_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./FightRing.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/FightRing.vue?vue&type=script&lang=js&");
- /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FightRing_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__.default); 
 
 /***/ }),
 
@@ -38156,23 +38083,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AllKnights_vue_vue_type_template_id_7b13ecd0_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AllKnights_vue_vue_type_template_id_7b13ecd0_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./AllKnights.vue?vue&type=template&id=7b13ecd0&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/AllKnights.vue?vue&type=template&id=7b13ecd0&scoped=true&");
-
-
-/***/ }),
-
-/***/ "./resources/js/components/FightRing.vue?vue&type=template&id=6cbf7885&":
-/*!******************************************************************************!*\
-  !*** ./resources/js/components/FightRing.vue?vue&type=template&id=6cbf7885& ***!
-  \******************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FightRing_vue_vue_type_template_id_6cbf7885___WEBPACK_IMPORTED_MODULE_0__.render),
-/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FightRing_vue_vue_type_template_id_6cbf7885___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
-/* harmony export */ });
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FightRing_vue_vue_type_template_id_6cbf7885___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./FightRing.vue?vue&type=template&id=6cbf7885& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/FightRing.vue?vue&type=template&id=6cbf7885&");
 
 
 /***/ }),
@@ -38258,8 +38168,8 @@ var render = function() {
             {
               name: "show",
               rawName: "v-show",
-              value: _vm.loading,
-              expression: "loading"
+              value: _vm.loading || _vm.fightInProgress,
+              expression: "loading||fightInProgress"
             }
           ],
           attrs: { id: "loader-view" }
@@ -38267,9 +38177,17 @@ var render = function() {
         [_vm._m(0)]
       ),
       _vm._v(" "),
+      _vm.fightInProgress
+        ? _c("p", [
+            _vm._v("Please Wait Fight is in Progress. It'll take 1 hour.")
+          ])
+        : _vm._e(),
+      _vm._v(" "),
       !_vm.loading
         ? [
-            _vm.knights.length > 0 && _vm.knights.length == 2
+            _vm.knights.length > 0 &&
+            _vm.knights.length == 2 &&
+            !_vm.isCompetitionEnd
               ? _c(
                   "button",
                   {
@@ -38313,6 +38231,36 @@ var render = function() {
                             {
                               name: "show",
                               rawName: "v-show",
+                              value: _vm.isCompetitionEnd,
+                              expression: "isCompetitionEnd"
+                            }
+                          ]
+                        },
+                        [_vm._v("Damage")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "th",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: _vm.isCompetitionEnd,
+                              expression: "isCompetitionEnd"
+                            }
+                          ]
+                        },
+                        [_vm._v("Health")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "th",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
                               value: _vm.knights.length > 2,
                               expression: "knights.length>2"
                             }
@@ -38326,89 +38274,143 @@ var render = function() {
                   _c(
                     "tbody",
                     _vm._l(_vm.knights, function(knight) {
-                      return _c("tr", { key: knight.id }, [
-                        _c("td", [_vm._v(_vm._s(knight.id))]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(knight.name))]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(knight.age))]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _vm._v(_vm._s(_vm.appendPercentage(knight.courage)))
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _vm._v(_vm._s(_vm.appendPercentage(knight.justice)))
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _vm._v(_vm._s(_vm.appendPercentage(knight.faith)))
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _vm._v(_vm._s(_vm.appendPercentage(knight.mercy)))
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _vm._v(
-                            _vm._s(_vm.appendPercentage(knight.generosity))
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _vm._v(_vm._s(_vm.appendPercentage(knight.hope)))
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [
+                      return _c(
+                        "tr",
+                        {
+                          key: knight.id,
+                          class: knight.is_winner ? "bg-success" : ""
+                        },
+                        [
+                          _c("td", [_vm._v(_vm._s(knight.id))]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(knight.name))]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(knight.age))]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _vm._v(_vm._s(_vm.appendPercentage(knight.courage)))
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _vm._v(_vm._s(_vm.appendPercentage(knight.justice)))
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _vm._v(_vm._s(_vm.appendPercentage(knight.faith)))
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _vm._v(_vm._s(_vm.appendPercentage(knight.mercy)))
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _vm._v(
+                              _vm._s(_vm.appendPercentage(knight.generosity))
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _vm._v(_vm._s(_vm.appendPercentage(knight.hope)))
+                          ]),
+                          _vm._v(" "),
                           _c(
-                            "div",
+                            "td",
                             {
                               directives: [
                                 {
                                   name: "show",
                                   rawName: "v-show",
-                                  value: _vm.knights.length > 2,
-                                  expression: "knights.length>2"
+                                  value: _vm.isCompetitionEnd,
+                                  expression: "isCompetitionEnd"
                                 }
-                              ],
-                              staticClass: "btn-group",
-                              attrs: { role: "group" }
+                              ]
                             },
-                            [
-                              _c(
-                                "button",
+                            [_vm._v(_vm._s(knight.damage))]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "td",
+                            {
+                              directives: [
                                 {
-                                  staticClass: "btn btn-success",
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.deleteKnight(knight.id)
-                                    }
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value: _vm.isCompetitionEnd,
+                                  expression: "isCompetitionEnd"
+                                }
+                              ]
+                            },
+                            [_vm._v(_vm._s(knight.health))]
+                          ),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c(
+                              "div",
+                              {
+                                directives: [
+                                  {
+                                    name: "show",
+                                    rawName: "v-show",
+                                    value: _vm.knights.length > 2,
+                                    expression: "knights.length>2"
                                   }
-                                },
-                                [_vm._v("Remove Knight")]
-                              )
-                            ]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        knight.is_winner
-                          ? _c("td", [
-                              _c("button", { staticClass: "btn btn-success" }, [
-                                _vm._v("Winner")
-                              ])
-                            ])
-                          : _vm._e()
-                      ])
+                                ],
+                                staticClass: "btn-group",
+                                attrs: { role: "group" }
+                              },
+                              [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-success",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.deleteKnight(knight.id)
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("Remove Knight")]
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              {
+                                directives: [
+                                  {
+                                    name: "show",
+                                    rawName: "v-show",
+                                    value: knight.is_winner,
+                                    expression: "knight.is_winner"
+                                  }
+                                ],
+                                staticClass: "btn-group",
+                                attrs: { role: "group" }
+                              },
+                              [
+                                _c(
+                                  "button",
+                                  { staticClass: "btn btn-success" },
+                                  [_vm._v("Winner")]
+                                )
+                              ]
+                            )
+                          ])
+                        ]
+                      )
                     }),
                     0
                   )
                 ])
               : _c("div", { staticClass: "text-center text-bold" }, [
-                  _c("p", [
-                    _vm._v(
-                      "There are no Knights Record. Please contact support."
-                    )
-                  ])
+                  !_vm.fightInProgress
+                    ? _c("p", [
+                        _vm._v(
+                          "There are no Knights Record. Please contact support."
+                        )
+                      ])
+                    : _vm._e()
                 ])
           ]
         : _vm._e()
@@ -38423,52 +38425,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("section", { staticClass: "loader-container" }, [
       _c("span", { staticClass: "loader" })
-    ])
-  }
-]
-render._withStripped = true
-
-
-
-/***/ }),
-
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/FightRing.vue?vue&type=template&id=6cbf7885&":
-/*!*********************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/FightRing.vue?vue&type=template&id=6cbf7885& ***!
-  \*********************************************************************************************************************************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* binding */ render),
-/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
-/* harmony export */ });
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row justify-content-center" }, [
-        _c("div", { staticClass: "col-md-8" }, [
-          _c("div", { staticClass: "card" }, [
-            _c("div", { staticClass: "card-header" }, [_vm._v("Fight")]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _vm._v(
-                "\n                    Fight has Been Started\n                "
-              )
-            ])
-          ])
-        ])
-      ])
     ])
   }
 ]
